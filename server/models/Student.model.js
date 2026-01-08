@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const { Schema, model } = mongoose;
 
 const studentSchema = new Schema(
@@ -17,36 +16,20 @@ const studentSchema = new Schema(
       required: true,
       unique: true,
     },
-    phone: {
-      type: String,
-    },
-    linkedinUrl: {
-      type: String,
-    },
-    languages: {
-      type: [String],
-    },
-    program: {
-      type: String,
-      required: true,
-    },
-    background: {
-      type: String,
-    },
-    image: {
-      type: String,
-      default:
-        "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-    },
+    phone: String,
+    linkedinUrl: String,
+    languages: [String],
+    program: String,
+    background: String,
+    image: String,
     cohort: {
       type: Schema.Types.ObjectId,
-      ref: "Cohort",
+      ref: "Cohort", // 🔥 RELACIÓN
       required: true,
     },
+    projects: [String],
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 module.exports = model("Student", studentSchema);

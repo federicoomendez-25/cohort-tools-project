@@ -4,19 +4,26 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
+// Routes
 const cohortRoutes = require("./routes/cohorts.routes");
 const studentRoutes = require("./routes/students.routes");
+
+// Error middleware
+const {
+  notFound,
+  errorHandler,
+} = require("./middlewares/error.middleware");
 
 const app = express();
 const PORT = 5005;
 
 // ======================
-// DB CONNECTION
+// DATABASE CONNECTION
 // ======================
 mongoose
   .connect("mongodb://127.0.0.1:27017/cohort-tools-api")
   .then(() => console.log("✅ Connected to MongoDB"))
-  .catch(err => console.error("❌ MongoDB error:", err));
+  .catch((err) => console.error("❌ MongoDB error:", err));
 
 // ======================
 // MIDDLEWARE
@@ -36,6 +43,12 @@ app.get("/api", (req, res) => {
 
 app.use("/api/cohorts", cohortRoutes);
 app.use("/api/students", studentRoutes);
+
+// ======================
+// ERROR HANDLING
+// ======================
+app.use(notFound);
+app.use(errorHandler);
 
 // ======================
 // START SERVER
