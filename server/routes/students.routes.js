@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const Student = require("../models/Student.model");
+const { isAuthenticated } = require("../middlewares/jwt.middleware");
 
 // ======================
-// GET all students
+// GET all students (PROTECTED)
 // ======================
-router.get("/", async (req, res, next) => {
+router.get("/", isAuthenticated, async (req, res, next) => {
   try {
     const students = await Student.find().populate("cohort");
     res.json(students);
@@ -15,9 +16,9 @@ router.get("/", async (req, res, next) => {
 });
 
 // ======================
-// GET student by ID
+// GET student by ID (PROTECTED)
 // ======================
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", isAuthenticated, async (req, res, next) => {
   try {
     const student = await Student.findById(req.params.id).populate("cohort");
 
@@ -32,9 +33,9 @@ router.get("/:id", async (req, res, next) => {
 });
 
 // ======================
-// CREATE student
+// CREATE student (PROTECTED)
 // ======================
-router.post("/", async (req, res, next) => {
+router.post("/", isAuthenticated, async (req, res, next) => {
   try {
     const student = await Student.create(req.body);
     res.status(201).json(student);
@@ -44,9 +45,9 @@ router.post("/", async (req, res, next) => {
 });
 
 // ======================
-// UPDATE student
+// UPDATE student (PROTECTED)
 // ======================
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", isAuthenticated, async (req, res, next) => {
   try {
     const updatedStudent = await Student.findByIdAndUpdate(
       req.params.id,
@@ -65,9 +66,9 @@ router.put("/:id", async (req, res, next) => {
 });
 
 // ======================
-// DELETE student
+// DELETE student (PROTECTED)
 // ======================
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", isAuthenticated, async (req, res, next) => {
   try {
     const deletedStudent = await Student.findByIdAndDelete(req.params.id);
 

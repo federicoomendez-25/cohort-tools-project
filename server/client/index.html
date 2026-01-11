@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Students App</title>
+</head>
+<body>
+  <h1>Students</h1>
+
+  <button id="load">Cargar Students</button>
+
+  <ul id="students"></ul>
+
+  <script>
+    const API_URL = "http://localhost:5005/api/students";
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTYzZWNjMzgxZDY1MTU2NzUyZTAwZWMiLCJlbWFpbCI6ImRlbW9AdGVzdC5jb20iLCJuYW1lIjoiRGVtbyBVc2VyIiwiaWF0IjoxNzY4MTU2Mzg4LCJleHAiOjE3NjgyNDI3ODh9.NhJpPaP1-npexk2ked-yKV1DQqXW_idqAIB_vRFc9NE";
+
+    document.getElementById("load").addEventListener("click", async () => {
+      const res = await fetch(API_URL, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const data = await res.json();
+      const ul = document.getElementById("students");
+      ul.innerHTML = "";
+
+      data.forEach(student => {
+        const li = document.createElement("li");
+        li.textContent = `${student.firstName} ${student.lastName} - ${student.cohort.cohortName}`;
+        ul.appendChild(li);
+      });
+    });
+  </script>
+</body>
+</html>

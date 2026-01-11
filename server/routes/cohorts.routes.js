@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const Cohort = require("../models/Cohort.model");
+const { isAuthenticated } = require("../middlewares/jwt.middleware");
 
-// GET all cohorts
-router.get("/", async (req, res) => {
+// ======================
+// GET all cohorts (PROTECTED)
+// ======================
+router.get("/", isAuthenticated, async (req, res) => {
   try {
     const cohorts = await Cohort.find();
     res.json(cohorts);
@@ -12,8 +15,10 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET cohort by ID
-router.get("/:cohortId", async (req, res) => {
+// ======================
+// GET cohort by ID (PROTECTED)
+// ======================
+router.get("/:cohortId", isAuthenticated, async (req, res) => {
   try {
     const cohort = await Cohort.findById(req.params.cohortId);
 
@@ -27,8 +32,10 @@ router.get("/:cohortId", async (req, res) => {
   }
 });
 
-// POST create cohort
-router.post("/", async (req, res) => {
+// ======================
+// POST create cohort (PROTECTED)
+// ======================
+router.post("/", isAuthenticated, async (req, res) => {
   try {
     const newCohort = await Cohort.create(req.body);
     res.status(201).json(newCohort);
@@ -37,8 +44,10 @@ router.post("/", async (req, res) => {
   }
 });
 
-// PUT update cohort
-router.put("/:cohortId", async (req, res) => {
+// ======================
+// PUT update cohort (PROTECTED)
+// ======================
+router.put("/:cohortId", isAuthenticated, async (req, res) => {
   try {
     const updatedCohort = await Cohort.findByIdAndUpdate(
       req.params.cohortId,
@@ -56,8 +65,10 @@ router.put("/:cohortId", async (req, res) => {
   }
 });
 
-// DELETE cohort
-router.delete("/:cohortId", async (req, res) => {
+// ======================
+// DELETE cohort (PROTECTED)
+// ======================
+router.delete("/:cohortId", isAuthenticated, async (req, res) => {
   try {
     const deletedCohort = await Cohort.findByIdAndDelete(req.params.cohortId);
 
