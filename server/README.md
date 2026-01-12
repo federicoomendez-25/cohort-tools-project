@@ -1,88 +1,87 @@
-# API Documentation
+API Documentation
 
 This documentation provides an overview of the available routes and data models for the Cohort Tools API.
 
-Throughout the project, you should use this documentation as a reference and a guide. Refer to it whenever you need information or more details on how to implement the routes or model your database.
+All routes in this API are protected and require authentication via JWT.
 
 <br>
+🔐 Authentication
 
-## Routes
+All routes are protected.
 
-In this section, you will find detailed information about the different routes available in the API.
-The API offers a variety of routes to work with *cohort* and *student* documents. Each route is associated with a specific HTTP verb and URL, allowing you to perform CRUD (Create, Read, Update, and Delete) actions on the data.
+To access the API you must include a valid JWT token in the request headers:
 
-<br>
+Authorization: Bearer <your_token>
 
-#### Cohort routes
 
-| HTTP verb | URL                        | Request body | Action                                 |
-| --------- | -------------------------- | ------------ | -------------------------------------- |
-| GET       | `/api/cohorts`             | (empty)      | Returns all the cohorts in JSON format |
-| GET       | `/api/cohorts/:cohortId`   | (empty)      | Returns the specified cohort by id     |
-| POST      | `/api/cohorts`             | JSON         | Creates a new cohort                   |
-| PUT       | `/api/cohorts/:cohortId`   | JSON         | Updates the specified cohort by id     |
-| DELETE    | `/api/cohorts/:cohortId`   | (empty)      | Deletes the specified cohort by id     |
-
+If the token is missing or invalid, the API will respond with 401 Unauthorized.
 
 <br>
+Routes
 
-#### Student routes
-
-| HTTP verb | URL                               | Request body | Action                                                         |
-| --------- | --------------------------------- | ------------ | -------------------------------------------------------------- |
-| GET       | `/api/students`                   | (empty)      | Returns all the students in JSON format                        |
-| GET       | `/api/students/cohort/:cohortId`  | (empty)      | Returns all the students of a specified cohort in JSON format  |
-| GET       | `/api/students/:studentId`        | (empty)      | Returns the specified student by id                            |
-| POST      | `/api/students`                   | JSON         | Creates a new student **with their respective cohort id**      |
-| PUT       | `/api/students/:studentId`        | JSON         | Updates the specified student by id                            |
-| DELETE    | `/api/students/:studentId`        | (empty)      | Deletes the specified cohort by id                             |
-
-
-<hr>
+The API provides CRUD operations for cohorts and students.
 
 <br>
+Cohort routes
+HTTP verb	URL	Request body	Action
+GET	/api/cohorts	(empty)	Returns all cohorts
+GET	/api/cohorts/:cohortId	(empty)	Returns a cohort by id
+POST	/api/cohorts	JSON	Creates a new cohort
+PUT	/api/cohorts/:cohortId	JSON	Updates a cohort by id
+DELETE	/api/cohorts/:cohortId	(empty)	Deletes a cohort by id
+<br>
+Student routes
+HTTP verb	URL	Request body	Action
+GET	/api/students	(empty)	Returns all students (with populated cohort)
+GET	/api/students/:id	(empty)	Returns a student by id
+POST	/api/students	JSON	Creates a new student (requires cohort id)
+PUT	/api/students/:id	JSON	Updates a student by id
+DELETE	/api/students/:id	(empty)	Deletes a student by id
+<br>
+Models
 
-## Models
-
-The *Models* section holds information about the data models for your database. It outlines the structure of the documents in the database, providing you with a clear understanding of how your data should be organized.
+This section describes the database schemas used in the application.
 
 <br>
-
-#### Cohort Model
-
-| Field          | Data Type        | Description                                 |
-|----------------|------------------|---------------------------------------------|
-| `cohortSlug`     | *`String`*           | Unique identifier for the cohort. Required. |
-| `cohortName`     | *`String`*           | Name of the cohort. Required.              |
-| `program`        | *`String`*           | Program/course name. Allowed values: "Web Dev", "UX/UI", "Data Analytics", "Cybersecurity". |
-| `format`         | *`String`*           | Format of the cohort. Allowed values: "Full Time", "Part Time". |
-| `campus`         | *`String`*           | Campus location. Allowed values: "Madrid", "Barcelona", "Miami", "Paris", "Berlin", "Amsterdam", "Lisbon", "Remote". |
-| `startDate`      | *`Date`*             | Start date of the cohort. Default: Current date. |
-| `endDate`        | *`Date`*             | End date of the cohort.                     |
-| `inProgress`     | *`Boolean`*          | Indicates if the cohort is currently in progress. Default: false. |
-| `programManager` | *`String`*           | Name of the program manager. Required.      |
-| `leadTeacher`    | *`String`*           | Name of the lead teacher. Required.         |
-| `totalHours`     | *`Number`*           | Total hours of the cohort program. Default: 360. |
-
-
+Cohort Model
+Field	Data Type	Description
+cohortSlug	String	Unique identifier for the cohort. Required.
+cohortName	String	Name of the cohort. Required.
+program	String	Program name. Required.
+format	String	Format of the cohort. Required.
+campus	String	Campus location. Required.
+startDate	Date	Start date of the cohort. Required.
+endDate	Date	End date of the cohort. Required.
+inProgress	Boolean	Indicates if the cohort is in progress.
+programManager	String	Program manager name. Required.
+leadTeacher	String	Lead teacher name. Required.
+totalHours	Number	Total program hours. Required.
 <br>
-
-#### Student Model
-
-| Field        | Data Type                            | Description                                  |
-|--------------|--------------------------------------|----------------------------------------------|
-| `firstName`    | *`String`*                               | First name of the student. Required.        |
-| `lastName`     | *`String`*                               | Last name of the student. Required.         |
-| `email`        | *`String`*                               | Email address of the student. Required, unique. |
-| `phone`        | *`String`*                               | Phone number of the student. Required.      |
-| `linkedinUrl`  | *`String`*                               | URL to the student's LinkedIn profile. Default: Empty string. |
-| `languages`    | *`Array`* of Strings                     | Spoken languages of the student. Allowed values: "English", "Spanish", "French", "German", "Portuguese", "Dutch", "Other". |
-| `program`      | *`String`*                               | Type of program the student is enrolled in. Allowed values: "Web Dev", "UX/UI", "Data Analytics", "Cybersecurity". |
-| `background`   | *`String`*                               | Background information about the student. Default: Empty. |
-| `image`        | *`String`*                               | URL to the student's profile image. Default: https://i.imgur.com/r8bo8u7.png . |
-| `cohort`       | *`ObjectId`*,                            | Reference *_id* of the cohort the student belongs to. |
-| `projects`     | *`Array`*                                | Array of the student's projects.   |
-
-
+Student Model
+Field	Data Type	Description
+firstName	String	Student first name. Required.
+lastName	String	Student last name. Required.
+email	String	Student email. Required and unique.
+phone	String	Student phone number.
+linkedinUrl	String	LinkedIn profile URL.
+languages	Array of Strings	Spoken languages.
+program	String	Program the student is enrolled in.
+background	String	Background information.
+image	String	Profile image URL.
+cohort	ObjectId (ref: Cohort)	Reference to the cohort the student belongs to.
+projects	Array of Strings	Student projects.
 <br>
+✅ Notes
 
+All routes are protected using JWT authentication.
+
+Student routes return populated cohort data.
+
+The API follows REST conventions and supports full CRUD operations.
+
+🚀 Status
+
+✅ Authentication implemented
+✅ Protected routes
+✅ CRUD complete
+✅ Population working
