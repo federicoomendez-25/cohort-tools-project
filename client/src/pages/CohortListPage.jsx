@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../services/api.service";
 import CohortFilterBar from "../components/CohortFilterBar";
 import CohortCard from "../components/CohortCard";
-
-// Import the string from the .env with URL of the API/server - http://localhost:5005
-const API_URL = import.meta.env.VITE_API_URL;
 
 function CohortListPage() {
   const [cohorts, setCohorts] = useState([]);
@@ -20,8 +17,8 @@ function CohortListPage() {
     if (campusQuery) queryString += `campus=${campusQuery}&`;
     if (programQuery) queryString += `program=${programQuery}`;
 
-    axios
-      .get(`${API_URL}/api/cohorts?${queryString}`)
+    api
+      .get(`/cohorts?${queryString}`)
       .then((response) => {
         setCohorts(response.data);
       })
@@ -29,8 +26,8 @@ function CohortListPage() {
   }, [campusQuery, programQuery]);
 
   const getAllCohorts = () => {
-    axios
-      .get(`${API_URL}/api/cohorts`)
+    api
+      .get("/cohorts")
       .then((response) => {
         setCohorts(response.data);
       })
@@ -60,15 +57,13 @@ function CohortListPage() {
       </div>
 
       {cohorts &&
-        cohorts.map(
-          (cohort, index) => (
-              <CohortCard
-                key={cohort._id}
-                {...cohort}
-                className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}
-              />
-          )
-        )}
+        cohorts.map((cohort, index) => (
+          <CohortCard
+            key={cohort._id}
+            {...cohort}
+            className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}
+          />
+        ))}
     </div>
   );
 }
